@@ -14,10 +14,9 @@ def test_roundtrip():
         carr = fwderiv.fft_r2c(rarr, carr, N, N)
         carr, rarr = fwderiv.fft_c2r(carr, rarr, N, N)
         rarr /= (N*N)
-        ok_(np.allclose(rarr, rarr_cpy, rtol=1e-5, atol=1e-4))
+        ok_(np.allclose(rarr, rarr_cpy, rtol=1e-7, atol=1e-6))
 
     N = 512
     for i in range(100):
         rarr = np.asfortranarray(np.random.rand(N,N).astype(fwderiv.fwr_real))
-        rarr *= 100.0
         yield _inner, rarr
