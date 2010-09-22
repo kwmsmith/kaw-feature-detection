@@ -2,7 +2,7 @@ FC = /opt/intel/Compiler/11.1/064/bin/intel64/ifort
 FFLAGS = -fPIC
 
 FFT_INC = -I/home/ksmith/opt/include/
-FFT_LIBS = -L/home/ksmith/opt/lib/ -lfftw3f
+FFT_LIBS = -L/home/ksmith/opt/lib/ -lfftw3f -lfftw3
 
 FWRAP = ~/Devel/fwrap/ve-python25/bin/python ~/Devel/fwrap/fwrap-git/fwrapc.py
 
