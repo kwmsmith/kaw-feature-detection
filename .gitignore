@@ -1,3 +1,5 @@
 *.mod
 *.o
 fwderiv
+ipython
+ve-python25
