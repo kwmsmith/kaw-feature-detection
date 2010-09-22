@@ -97,7 +97,7 @@ class test_gammas(object):
             v /= (N*N)
             gam_scal = fwderiv.gamma_scal(u, v, gam_scal)
             gam_scal /= (N*N)
-            ok_(np.allclose(gam_scal, 0.0, atol=1e-7, rtol=1e-6), `(N, m, n)`)
+            ok_(np.allclose(gam_scal, 0.0, atol=1e-7, rtol=1e-7), `(N, m, n)`)
 
         for i in range(self.N/2):
             for j in range(self.N/2):
