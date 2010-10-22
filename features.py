@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 
+import numpy as np
 
 def eigman(arr, CCW=1.0, CW=-1.0, STR=0.0):
     '''
@@ -25,3 +27,29 @@ def eigman(arr, CCW=1.0, CW=-1.0, STR=0.0):
     thresh[-grot > gstr] = CW
     thresh[gstr > np.abs(grot)] = STR
     return thresh
+
+def eigman_h5(h5file, fieldnames):
+    import tables
+    dta = tables.openFile(h5file, mode='r+')
+    try:
+        for fieldname in fieldnames:
+            gp = dta.getNode('/%s' % fieldname)
+            em_gp = dta.createGroup('/', '%s_em' % fieldname, '%s eigenvalue manifold' % fieldname)
+            for arr in gp:
+                arr_dta = arr.read()
+                dta.createArray(em_gp, arr.name, eigman(arr_dta), 'eigenvalue manifold')
+    finally:
+        dta.close()
+
+if __name__ == '__main__':
+    from optparse import OptionParser
+    usage = "%prog [options] field_name1 [field_name2 ...]"
+    parser = OptionParser(usage=usage)
+    parser.add_option("-f", "--file", dest="fname",
+                        help="hdf5 data file")
+    options, args = parser.parse_args()
+    if not options.fname:
+        parser.print_help()
+        sys.exit(1)
+
+    eigman_h5(options.fname, args)
