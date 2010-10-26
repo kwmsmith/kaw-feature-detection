@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.linalg import norm
 
-from fwderiv import fwderiv
+import fwderiv
 
 from nose.tools import set_trace, ok_, eq_
 

@@ -17,3 +17,4 @@ all:
 clean:
 	-rm -r *.o *.mod
 	-rm -rf fwderiv
+	-rm *.pyc

@@ -10,7 +10,7 @@ def eigman(arr, CCW=1.0, CW=-1.0, STR=0.0):
     tmp1 = arr.copy('F')
     tmp2 = arr.copy('F')
     tmp3 = arr.copy('F')
-    from fwderiv.fwderiv import gamma_scal, gamma_rotation, gamma_stretch, vel_xy
+    from fwderiv import gamma_scal, gamma_rotation, gamma_stretch, vel_xy
     u, v = vel_xy(arr, tmp1, tmp2)
     gscal = gamma_scal(u, v, tmp3)
     grot = gscal.copy('F')
