@@ -34,7 +34,10 @@ def eigman_h5(h5file, fieldnames):
     try:
         for fieldname in fieldnames:
             gp = dta.getNode('/%s' % fieldname)
-            em_gp = dta.createGroup('/', '%s_em' % fieldname, '%s eigenvalue manifold' % fieldname)
+            try:
+                em_gp = dta.createGroup('/', '%s_em' % fieldname, '%s eigenvalue manifold' % fieldname)
+            except tables.exceptions.NodeError:
+                em_gp = dta.getNode('/%s_em' % fieldname)
             for arr in gp:
                 arr_dta = arr.read()
                 dta.createArray(em_gp, arr.name, eigman(arr_dta), 'eigenvalue manifold')
@@ -42,6 +45,7 @@ def eigman_h5(h5file, fieldnames):
         dta.close()
 
 if __name__ == '__main__':
+    import sys
     from optparse import OptionParser
     usage = "%prog [options] field_name1 [field_name2 ...]"
     parser = OptionParser(usage=usage)
