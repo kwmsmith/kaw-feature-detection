@@ -84,7 +84,7 @@ class test_fft(object):
 class test_gammas(object):
 
     def setup(self):
-        self.N = 128
+        self.N = 64
 
     def test_gam_scl(self):
         def _inner(N, m, n):
@@ -102,3 +102,12 @@ class test_gammas(object):
         for i in range(self.N/2):
             for j in range(self.N/2):
                 _inner(self.N, i, j)
+
+def test_make_gauss():
+    N = 512
+    arr = np.zeros((N, N), dtype=np.double, order='F')
+    sigma = 10.0 / N * 2.0 * np.pi
+    arr = fwderiv.make_gauss(arr, sigma)
+    eq_(np.max(arr), arr[0,0])
+    eq_(arr[-1,0], arr[0,-1])
+    ok_(np.allclose(np.sum(arr), 1.0))

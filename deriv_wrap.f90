@@ -26,7 +26,13 @@ subroutine deriv(rin, rout, axis, order)
     double precision, intent(in) :: rin(:,:)
     double precision, intent(out) :: rout(:,:)
 
+    double precision :: norm
+
     call deriv_(rin, rout, axis, order)
+
+    norm = 1.0D0 / (size(rout, 1) * size(rout, 2))
+
+    rout = rout * norm
 
 end subroutine deriv
 
@@ -101,3 +107,31 @@ subroutine gamma_stretch(u, v, gam_str)
     gam_str = 0.5 * sqrt(gam_str)
 
 end subroutine gamma_stretch
+
+subroutine make_gauss(rout, sigma)
+    use deriv_fft, only : make_gauss_ => make_gauss, TWO_PI
+    implicit none
+    double precision, intent(out) :: rout(:,:)
+    double precision, intent(in) :: sigma
+
+    call make_gauss_(rout, sigma, TWO_PI)
+
+end subroutine make_gauss
+
+subroutine convolve_rr(rin1, rin2, rout)
+    use deriv_fft, only : fft_r2c_, fft_c2r_
+    implicit none
+    double precision, intent(in) :: rin1(:,:), rin2(:,:)
+    double precision, intent(out) :: rout(:,:)
+
+    double complex :: c1(size(rin1, 1)/2+1, size(rin1, 2)), &
+                      c2(size(rin2, 1)/2+1, size(rin2, 2))
+
+    call fft_r2c_(rin1, c1)
+    call fft_r2c_(rin2, c2)
+
+    c1 = c1 * c2
+
+    call fft_c2r_(c1, rout)
+
+end subroutine convolve_rr

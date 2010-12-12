@@ -2,6 +2,8 @@ module deriv_fft
     implicit none
     include 'fftw3.f'
 
+    double precision, parameter :: TWO_PI = 3.1415926535897932384626433832795028841971693993751058209749445923078D0
+
     contains
 
     subroutine fft_r2c_(rin, cout)
@@ -67,5 +69,46 @@ module deriv_fft
         endif
         call fft_c2r_(carr, rout)
     end subroutine deriv
+
+    subroutine make_gauss(rout, sigma, L)
+        implicit none
+        double precision, intent(out) :: rout(0:,0:)
+        double precision, intent(in) :: sigma, L
+
+        double precision :: Y(lbound(rout, 2):ubound(rout, 2))
+
+        double precision :: val, del, fac
+
+        integer Nx, Ny, i, j
+
+        Nx = size(rout, 1); Ny = size(rout, 2)
+
+        del = L / Nx
+        
+        ! First half of Y: 0, 1, 2, ..., N/2
+        do i = 0, Ny/2
+            Y(i) = i
+        enddo
+
+        ! Second half of Y: ... N/2-1, N/2-2, ..., 1
+        val = 1.0D0
+        do i = ubound(Y, 1), Ny/2+1, -1
+            Y(i) = val
+            val = val + 1.0D0
+        enddo
+
+        Y = Y * del
+
+        fac = 1.0D0 / 2.0D0 / sigma**2
+        do j = lbound(rout, 2), ubound(rout, 2)
+            do i = lbound(rout, 1), ubound(rout, 1)
+                val = -(Y(i)**2 + Y(j)**2) * fac
+                rout(i, j) = exp(val)
+            enddo
+        enddo
+
+        rout = rout / sum(rout)
+
+    end subroutine make_gauss
 
 end module deriv_fft
